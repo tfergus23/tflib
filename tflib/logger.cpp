@@ -2,7 +2,7 @@
 #include <string>
 #include <chrono>
 #include <ctime>
-#include "logger.h"
+#include "../include/logger.h"
 
 namespace tflib{
 
@@ -35,6 +35,6 @@ namespace tflib{
 
     void logFatal(const std::string &message, int errCode){
         std::cerr << currentTimeStamp() + " [FATAL] " + message << std::endl;
-        throw std::exception("Fatal error: Check stderr for details");
+        throw 1;
     }
 }

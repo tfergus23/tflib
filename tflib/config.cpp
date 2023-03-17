@@ -1,8 +1,9 @@
-#include "config.h"
+#include "../include/config.h"
 #include <map>
 #include <string>
 #include <fstream>
 #include <stdexcept>
+#include <iostream>
 
 namespace tflib{
 
@@ -11,7 +12,7 @@ namespace tflib{
         iniFileStream.open(fileName, std::ios::in);
         std::string line;
         if (!iniFileStream.is_open()){
-            throw std::exception("Could not open INI file");
+            throw std::cerr << "Could not open INI file\n";
         }
         while (getline(iniFileStream, line)){
             std::string key = "";

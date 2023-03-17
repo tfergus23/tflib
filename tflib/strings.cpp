@@ -1,6 +1,6 @@
 #include <string>
-#include "strings.h"
-#include "logger.h"
+#include "../include/strings.h"
+#include "../include/logger.h"
 #include <vector>
 #include <map>
 #include <fstream>
