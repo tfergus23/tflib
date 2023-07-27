@@ -1,50 +1,17 @@
-#include "../include/config.h"
-#include <map>
-#include <string>
-#include <fstream>
-#include <stdexcept>
-#include <iostream>
+#include "include/config.h"
 
-namespace tflib{
+using namespace tflib;
 
-    void readIniFile(const std::string &fileName){
-        std::fstream iniFileStream;
-        iniFileStream.open(fileName, std::ios::in);
-        std::string line;
-        if (!iniFileStream.is_open()){
-            throw std::cerr << "Could not open INI file\n";
-        }
-        while (getline(iniFileStream, line)){
-            std::string key = "";
-            std::string val = "";
-            int i = 0;
-            bool foundEquals = false;
-            while (i < line.length()){
-                if (line[i] == '='){
-                    i++;
-                    foundEquals = true;
-                    break;
-                }
-                key += line[i];
-                i++;
-            }
-            if (!foundEquals){
-                throw std::exception("Malformed INI file: no equals sign found");
-            }
-            if (iniMap.count(key)){
-                throw std::exception("Duplicate INI variable found");
-            }
-            while (i < line.length()){
-                val += line[i];
-                i++;
-            }
-            iniMap.insert(std::pair<std::string,std::string>(key,val));
-        }
-        iniFileStream.close();
-    }
+ini_file::ini_file(const std::string& file_path, bool watch_file) : m_file_path{file_path}, watch_file{watch_file} {
 
-    std::string getIniVar(const std::string &varName){
-        return iniMap[varName];
-    }
+}
+std::string ini_file::get(const std::string& key){
+    
+}
+bool ini_file::has_key(const std::string& key){
+
 }
 
+void ini_file::read_file(){
+
+}

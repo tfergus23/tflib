@@ -4,9 +4,8 @@
 #include <map>
 
 namespace tflib{
-    const std::string WHITESPACE = " \n\r\t\f\v";
-    const std::vector<std::string> split(const std::string &string, const unsigned char &delimitter);
-    std::string removeComment(const std::string &string, const unsigned char &commentChar='#');
+    void split(const std::string &string, const std::string& delimitter, std::vector<std::string>& out);
+    std::string remove_comment_from_line(const std::string &line, const std::string& comment_str = "#");
     std::string trim(const std::string &string);
-    std::string toLower(const std::string &string);
+    std::string to_lower(const std::string &string);
 }

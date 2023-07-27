@@ -1,9 +1,20 @@
-#pragma once
-#include <map>
 #include <string>
+#include <fstream>
+#include <stdexcept>
+#include <iostream>
+#include <unordered_map>
 
 namespace tflib{
-    static std::map<std::string,std::string> iniMap;
-    void readIniFile(const std::string &fileName);
-    std::string getIniVar(const std::string &varName);
+    class ini_file{
+    public:
+        ini_file(const std::string& file_path, bool watch_file=false);
+        std::string get(const std::string& key);
+        bool has_key(const std::string& key);
+        bool watch_file = false;
+    private:
+        void read_file();
+        const std::string m_file_path;
+        std::unordered_map<std::string,std::string> m_map;
+    };
 }
+

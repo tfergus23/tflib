@@ -1,40 +1,51 @@
-#include <iostream>
-#include <string>
-#include <chrono>
-#include <ctime>
-#include "../include/logger.h"
+#include "include/logger.h"
+using namespace tflib;
 
-namespace tflib{
+std::string logger::get_prefix(){
+    return m_prefix;
+}
+void logger::set_prefix(const std::string& prefix){
+    m_prefix = prefix;
+}
 
-    void setLogLevel(const std::string &newLevel){
-        if (newLevel == "debug") mLogLevel = DEBUG;
-        else mLogLevel = ERROR;
+std::string logger::get_suffix(){
+    return m_suffix;
+}
+void logger::set_suffix(const std::string& suffix){
+    m_suffix = suffix;
+}
+
+void logger::fatal(const std::string& message){
+    if (level >= log_level::FATAL){
+        log(message);
     }
-
-    std::string currentTimeStamp(){
-        auto start = std::chrono::system_clock::now();
-        std::time_t startTime = std::chrono::system_clock::to_time_t(start);
-        std::string timeString = std::ctime(&startTime);
-        timeString = timeString.substr(0,timeString.length()-1);
-        return timeString;
+}
+void logger::error(const std::string& message){
+    if (level >= log_level::ERROR){
+        log(message);
     }
-
-    void logOut(const std::string &message){
-        std::cout << currentTimeStamp() + "  [INFO] " + message << std::endl;
+}
+void logger::warn(const std::string& message){
+    if (level >= log_level::WARN){
+        log(message);
     }
-
-    void logError(const std::string &message){
-        if (mLogLevel >= ERROR)
-            std::cerr << currentTimeStamp() + " [ERROR] " + message << std::endl;
+}
+void logger::info(const std::string& message){
+    if (level >= log_level::INFO){
+        log(message);
     }
-
-    void logDebug(const std::string &message){
-        if (mLogLevel >= DEBUG)
-            std::cerr << currentTimeStamp() + " [DEBUG] " + message << std::endl;
+}
+void logger::debug(const std::string& message){
+    if (level >= log_level::DEBUG){
+        log(message);
     }
-
-    void logFatal(const std::string &message, int errCode){
-        std::cerr << currentTimeStamp() + " [FATAL] " + message << std::endl;
-        throw 1;
+}
+void logger::trace(const std::string& message){
+    if (level >= log_level::TRACE){
+        log(message);
     }
+}
+
+void logger::log(const std::string& message){
+    std::cout << m_prefix << message << m_suffix << '\n';
 }
