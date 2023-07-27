@@ -1,4 +1,4 @@
-#include "../include/logger.h"
+#include "logger.h"
 using namespace tflib;
 
 static const std::unordered_map<log_level, std::string> LEVEL_STRINGS = {

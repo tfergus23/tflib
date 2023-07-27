@@ -1,5 +1,5 @@
-#include "../include/config.h"
-#include "../include/strings.h"
+#include "config.h"
+#include "strings.h"
 #include <string>
 
 using namespace tflib;

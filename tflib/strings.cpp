@@ -1,5 +1,5 @@
 #include <string>
-#include "../include/strings.h"
+#include "strings.h"
 #include <vector>
 #include <map>
 #include <fstream>
