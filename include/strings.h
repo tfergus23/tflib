@@ -8,4 +8,5 @@ namespace tflib{
     std::string remove_comment_from_line(const std::string &line, const std::string& comment_str = "#");
     std::string trim(const std::string &string);
     std::string to_lower(const std::string &string);
+    std::string to_upper(const std::string &string);
 }

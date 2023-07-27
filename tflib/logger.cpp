@@ -2,11 +2,11 @@
 using namespace tflib;
 
 static const std::unordered_map<log_level, std::string> LEVEL_STRINGS = {
-    {log_level::OFF, "OFF"},
+    {log_level::OFF, " OFF "},
     {log_level::FATAL, "FATAL"},
     {log_level::ERROR, "ERROR"},
-    {log_level::WARN, "WARN"},
-    {log_level::INFO, "INFO"},
+    {log_level::WARN, " WARN"},
+    {log_level::INFO, " INFO"},
     {log_level::DEBUG, "DEBUG"},
     {log_level::TRACE, "TRACE"},
 };
