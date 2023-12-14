@@ -7,18 +7,34 @@ using namespace tflib;
 ini_file::ini_file(const std::string& file_path, bool watch_file) : m_file_path{file_path}, watch_file{watch_file} {
     read_file();
 }
-const std::string& ini_file::get(const std::string& key){
+const std::string& ini_file::get(const std::string& section, const std::string& key){
     if (watch_file){
         read_file();
     }
     try{
-        return m_map.at(key);
+        return m_map.at(section).at(key);
     } catch (const std::out_of_range& e){
-        throw std::runtime_error("Key not found in " + m_file_path + ": '" + key + "'");
+        throw std::runtime_error("Key not found in " + m_file_path + ((section == "") ? "" : ", section " + section) + ": '" + key + "'");
     }
 }
+
+const std::string& ini_file::get(const std::string& key){
+    return get("", key);
+}
+
+bool ini_file::has_key(const std::string& section, const std::string& key){
+    if (m_map.count(section)){
+        return m_map.at(section).count(key);
+    }
+    return false;
+}
+
 bool ini_file::has_key(const std::string& key){
-    return m_map.count(key);
+    return has_key("", key);
+}
+
+bool line_is_section_definition(const std::string& line){
+    return line.size() > 0 && line[0] == '[' && line[line.size()-1] == ']';
 }
 
 void ini_file::read_file(){
@@ -31,8 +47,15 @@ void ini_file::read_file(){
     int line_num = 1;
     m_map.clear();
 
+    std::string current_section = "";
+    load_defaults();
+
     for(std::string line; std::getline(in_file, line);){
         line = trim(remove_comment_from_line(line, "#"));
+        if (line_is_section_definition(line)){
+            current_section = trim(line.substr(1,line.size()-2));
+            continue;
+        }
         if (line != ""){
             int first_equals = line.find_first_of('=');
             if (first_equals == std::string::npos){
@@ -40,7 +63,7 @@ void ini_file::read_file(){
             }
             std::string key = line.substr(0, first_equals);
             std::string val = line.substr(first_equals+1, line.size());
-            m_map[trim(key)] = trim(val);
+            m_map[current_section][trim(key)] = trim(val);
         }
 
         line_num++;
@@ -48,7 +71,22 @@ void ini_file::read_file(){
 }
 
 void ini_file::print() const{
-    for(auto& [key,val] : m_map){
-        std::cout << "'" << key  <<"'" << ": '" << val <<"'" << '\n';
+    for (auto& [section, map] : m_map){
+        std::cout << "[" << section << "]\n";
+        for(auto& [key,val] : map){
+            std::cout << "'" << key  <<"'" << ": '" << val <<"'" << '\n';
+        }
+    }
+
+}
+
+void ini_file::set_defaults(const std::vector<default_value>& defaults){
+    m_defaults = defaults;
+    read_file();
+}
+
+void ini_file::load_defaults(){
+    for (auto& def : m_defaults){
+        m_map[def.section][def.key] = def.value;
     }
 }
