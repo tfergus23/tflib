@@ -8,9 +8,10 @@
 
 const std::string WHITESPACE = " \n\r\t\f\v";
 
-void tflib::split(const std::string &string, const std::string& delimitter, std::vector<std::string>& out){
+std::vector<std::string> tflib::split(const std::string &string, const std::string& delimitter){
     int start = 0;
     int next = 0;
+    std::vector<std::string> out;
     while (start < string.size()){
         next = string.find(delimitter, start);
         if (next == std::string::npos){
@@ -22,6 +23,7 @@ void tflib::split(const std::string &string, const std::string& delimitter, std:
     if (next == string.size() - delimitter.size()){
         out.push_back("");
     }
+    return out;
 }
 std::string tflib::remove_comment_from_line(const std::string &line, const std::string& comment_str){
     return line.substr(0, line.find(comment_str));
