@@ -1,6 +1,6 @@
 #pragma once
 #include <stdexcept>
-#include <cstring>
+//#include <cstring>
 
 namespace tflib{
     template <typename T, size_t S>
@@ -10,9 +10,11 @@ namespace tflib{
             return m_size;
         }
         void push_back(T element) {
+#ifndef NDEBUG
             if (m_size >= capacity) {
                 throw std::out_of_range("Tried to add element to static vector, but it is already at capacity.");
             }
+#endif
             arr[m_size++] = element;
         }
         void pop_back() {
@@ -21,23 +23,27 @@ namespace tflib{
 
 
         T& operator[](size_t index) {
+#ifndef NDEBUG
             if (index >= m_size || index < 0) {
                 throw std::out_of_range("Index is out of bounds of the static vector: " + std::to_string(index));
             }
+#endif
             return arr[index];
         }
 
-        const T at(size_t index) const {
+        const T& operator[](size_t index) const {
+#ifndef NDEBUG
             if (index >= m_size || index < 0) {
                 throw std::out_of_range("Index is out of bounds of the static vector: " + std::to_string(index));
             }
+#endif
             return arr[index];
         }
 
         void clear(){
             m_size = 0;
         }
-        size_t find(T element) const{
+        size_t find(const T& element) const{
             for(size_t i = 0; i < m_size; i++){
                 if (arr[i] == element){
                     return i;
@@ -47,9 +53,11 @@ namespace tflib{
         }
 
         void remove_at(size_t index){
+#ifndef NDEBUG
             if (index >= m_size || index < 0) {
                 throw std::out_of_range("Index is out of bounds of the static vector: " + std::to_string(index));
             }
+#endif
             if (index == m_size-1){
                 pop_back();
                 return;
