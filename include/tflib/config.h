@@ -9,9 +9,10 @@ namespace tflib{
     class ini_file{
     public:
         ini_file(const std::string& file_path, bool watch_file=true);
-        std::string get(const std::string& key);
+        const std::string& get(const std::string& key);
         bool has_key(const std::string& key);
         bool watch_file = false;
+        void print() const;
     private:
         void read_file();
         const std::string m_file_path;
