@@ -1,21 +1,33 @@
 #pragma once
 #include <stdexcept>
-//#include <cstring>
 
 namespace tflib{
+    /*
+    tflib::static_vector is a std::vector with fixed capacity, meaning it can be allocated on the stack.
+    */
     template <typename T, size_t S>
     class static_vector {
     public:
         size_t size() const {
             return m_size;
         }
-        void push_back(T element) {
+        void push_back(const T& element) {
 #ifndef NDEBUG
-            if (m_size >= capacity) {
+            if (m_size >= capacity()) {
                 throw std::out_of_range("Tried to add element to static vector, but it is already at capacity.");
             }
 #endif
             arr[m_size++] = element;
+        }
+
+        template <class... Args>
+        void emplace_back(Args&&... args){
+#ifndef NDEBUG
+            if (m_size >= capacity()) {
+                throw std::out_of_range("Tried to add element to static vector, but it is already at capacity.");
+            }
+#endif
+            new(&arr[m_size++]) T(std::forward<Args>(args)...);
         }
         void pop_back() {
             m_size--;
@@ -70,8 +82,9 @@ namespace tflib{
             m_size--;
         }
 
-
-        const size_t capacity = S;
+        size_t capacity(){
+            return S;
+        }
     private:
         size_t m_size = 0;
         T arr[S];

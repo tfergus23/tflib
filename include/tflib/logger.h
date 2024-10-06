@@ -6,7 +6,7 @@
 #include <functional>
 
 namespace tflib{
-    enum class log_level {OFF = 0,FATAL = 1,ERROR = 2,WARN = 3,INFO = 4,DEBUG = 5,TRACE = 6};
+    enum class log_level : unsigned char {OFF = 0,FATAL = 1,ERROR = 2,WARN = 3,INFO = 4,DEBUG = 5,TRACE = 6};
 
 
     class std_out_appender{
