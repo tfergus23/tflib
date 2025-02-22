@@ -1,5 +1,7 @@
 #pragma once
 #include <stdexcept>
+#include <array>
+#include <iostream>
 
 namespace tflib{
     /*
@@ -20,6 +22,15 @@ namespace tflib{
             arr[m_size++] = element;
         }
 
+        void push_back(const T&& element) {
+#ifndef NDEBUG
+            if (m_size >= capacity()) {
+                throw std::out_of_range("Tried to add element to static vector, but it is already at capacity.");
+            }
+#endif
+            arr[m_size++] = element;
+        }
+
         template <class... Args>
         void emplace_back(Args&&... args){
 #ifndef NDEBUG
@@ -27,9 +38,11 @@ namespace tflib{
                 throw std::out_of_range("Tried to add element to static vector, but it is already at capacity.");
             }
 #endif
+            arr[m_size].~T();
             new(&arr[m_size++]) T(std::forward<Args>(args)...);
         }
         void pop_back() {
+            arr[m_size-1].~T();
             m_size--;
         }
 
@@ -53,6 +66,9 @@ namespace tflib{
         }
 
         void clear(){
+            for (size_t i = 0; i < m_size; i++){
+                arr[i].~T();
+            }
             m_size = 0;
         }
         size_t find(const T& element) const{
@@ -74,7 +90,9 @@ namespace tflib{
                 pop_back();
                 return;
             }
-            
+
+            arr[index].~T();
+
             for (size_t i = index; i < m_size-1; i++){
                 arr[i] = arr[i+1];
             }
@@ -87,6 +105,6 @@ namespace tflib{
         }
     private:
         size_t m_size = 0;
-        T arr[S];
+        std::array<T,S> arr;
     };
 }
