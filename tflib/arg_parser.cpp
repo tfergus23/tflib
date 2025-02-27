@@ -5,9 +5,6 @@
 using namespace tflib;
 
 void arg_parser::add_optional_arg(const std::string& name, char shorthand){
-    if (name.size() < 2){
-        throw std::runtime_error("Optional arguments should be at least two characters, '" + name + "' provided");
-    }
     m_optional_args[name];
     m_shorthands[shorthand] = name;
 }
