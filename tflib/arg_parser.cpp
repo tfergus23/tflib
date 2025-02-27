@@ -94,5 +94,8 @@ std::string arg_parser::parse(int argc, char** argv){
     if (positional_index < m_positional_arg_names.size()){
         return "Missing positional argument '" + m_positional_arg_names[positional_index] + "' at position " + std::to_string(positional_index);
     }
+    if (last_optional_arg_found != ""){
+        return "No value provided for optional argument '" + last_optional_arg_found + "'";
+    }
     return "";
 }
