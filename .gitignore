@@ -6,3 +6,4 @@ main.cpp
 out
 test.ini
 core
+.env
