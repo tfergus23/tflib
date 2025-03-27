@@ -28,3 +28,11 @@ void tflib::load_dotenv(const char* path_to_env_file){
         setenv(name.c_str(), value.c_str(), 1);
     }
 }
+
+std::string tflib::get_env(std::string_view name){
+    const char* value = getenv(name.data());
+    if (value){
+        return value;
+    }
+    return "";
+}
