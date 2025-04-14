@@ -25,6 +25,26 @@ std::vector<std::string> tflib::split(const std::string &string, const std::stri
     }
     return out;
 }
+
+std::vector<std::string_view> tflib::split_views(std::string_view string, std::string delimitter){
+    int start = 0;
+    int next = 0;
+    std::vector<std::string_view> out;
+    while (start < string.size()){
+        next = string.find(delimitter, start);
+        if (next == std::string::npos){
+            next = string.size();
+        }
+        size_t size = string.size() - start - (string.size() - next);
+        out.emplace_back(string.data() + start, size);
+        start = next + delimitter.size();
+    }
+    if (next == string.size() - delimitter.size()){
+        out.emplace_back("");
+    }
+    return out;
+}
+
 std::string tflib::remove_comment_from_line(const std::string &line, const std::string& comment_str){
     return line.substr(0, line.find(comment_str));
 }
