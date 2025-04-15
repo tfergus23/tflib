@@ -7,6 +7,11 @@ using namespace tflib;
 ini_file::ini_file(const std::string& file_path, bool watch_file) : m_file_path{file_path}, watch_file{watch_file} {
     read_file();
 }
+
+ini_file::ini_file(const std::string& file_path, const std::vector<default_value>& defaults, bool watch_file) : m_file_path{file_path}, watch_file{watch_file}, m_defaults{defaults}{
+    read_file();
+}
+
 const std::string& ini_file::get(const std::string& section, const std::string& key){
     if (watch_file){
         read_file();

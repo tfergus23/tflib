@@ -19,6 +19,7 @@ namespace tflib{
         /// @param file_path Path to ini file
         /// @param watch_file Switch whether or not to reload the file each time a value is accessed.
         ini_file(const std::string& file_path, bool watch_file=true);
+        ini_file(const std::string& file_path, const std::vector<default_value>& defaults, bool watch_file=true);
         //Wrapper for get("", key)
         const std::string& get(const std::string& key);
         //Gets the value for the key in the specified section. Throws runtime_exception if the section doesn't exist or the key doesn't exist in the section.
