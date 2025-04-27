@@ -42,6 +42,7 @@ namespace tflib{
         void read_file();
         void load_defaults();
         const std::string m_file_path;
+        std::ifstream m_file;
         std::unordered_map<std::string,std::unordered_map<std::string,std::string>> m_map;
         std::vector<default_value> m_defaults;
     };

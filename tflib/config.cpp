@@ -4,11 +4,14 @@
 
 using namespace tflib;
 
-ini_file::ini_file(const std::string& file_path, bool watch_file) : m_file_path{file_path}, watch_file{watch_file} {
+ini_file::ini_file(const std::string& file_path, bool watch_file) : m_file_path{file_path}, watch_file{watch_file}, m_file{file_path} {
+    if (!m_file){
+        throw std::runtime_error("File not found and no defaults supplied: " + file_path);
+    }
     read_file();
 }
 
-ini_file::ini_file(const std::string& file_path, const std::vector<default_value>& defaults, bool watch_file) : m_file_path{file_path}, watch_file{watch_file}, m_defaults{defaults}{
+ini_file::ini_file(const std::string& file_path, const std::vector<default_value>& defaults, bool watch_file) : m_file_path{file_path}, watch_file{watch_file}, m_defaults{defaults}, m_file{file_path}{
     read_file();
 }
 
@@ -43,11 +46,6 @@ bool line_is_section_definition(const std::string& line){
 }
 
 void ini_file::read_file(){
-    std::ifstream in_file(m_file_path);
-
-    if (!in_file.is_open()){
-        throw std::runtime_error("File not found: " + m_file_path);
-    }
 
     int line_num = 1;
     m_map.clear();
@@ -55,7 +53,11 @@ void ini_file::read_file(){
     std::string current_section = "";
     load_defaults();
 
-    for(std::string line; std::getline(in_file, line);){
+    if (!m_file){
+        return;
+    }
+
+    for(std::string line; std::getline(m_file, line);){
         line = trim(remove_comment_from_line(line, "#"));
         if (line_is_section_definition(line)){
             current_section = trim(line.substr(1,line.size()-2));
@@ -72,6 +74,9 @@ void ini_file::read_file(){
         }
 
         line_num++;
+    }
+    if (!watch_file){
+        m_file.close();
     }
 }
 

@@ -2,7 +2,6 @@
 *.obj
 *.exe
 main
-main.cpp
 out
 test.ini
 core
