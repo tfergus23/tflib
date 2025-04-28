@@ -24,6 +24,8 @@ namespace tflib{
         const std::string& get(const std::string& key);
         //Gets the value for the key in the specified section. Throws runtime_exception if the section doesn't exist or the key doesn't exist in the section.
         const std::string& get(const std::string& section, const std::string& key);
+        int32_t get_int(const std::string& key);
+        int32_t get_int(const std::string& section, const std::string& key);
         //Allows you to set default values for specified section/key/value pairs. Pairs specified in the ini file will take precedenced over these. Example:
         //
         //config.set_defaults({

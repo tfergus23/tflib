@@ -100,3 +100,16 @@ void ini_file::load_defaults(){
         m_map[def.section][def.key] = def.value;
     }
 }
+
+int32_t ini_file::get_int(const std::string& key){
+    return get_int("", key);
+}
+int32_t ini_file::get_int(const std::string& section, const std::string& key){
+    const auto& str = get(section, key);
+    try{
+        return stoi(str);
+    }
+    catch(...){
+        throw std::runtime_error("Invalid value for " + (section != "" ?  section + "." : "") + key + " in " + m_file_path + ". Expected a signed 32-bit integer, got '" + str + "'");
+    }
+}
