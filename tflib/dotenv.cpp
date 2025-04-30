@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
 void tflib::load_dotenv(){
     load_dotenv("./.env");
@@ -25,7 +28,12 @@ void tflib::load_dotenv(const char* path_to_env_file){
 
         std::string name = line.substr(0,equals);
         std::string value = line.substr(equals+1, line.size()-equals);
+#ifdef __LINUX__
         setenv(name.c_str(), value.c_str(), 1);
+#endif
+#ifdef _WIN32
+        SetEnvironmentVariable(name.c_str(), value.c_str());
+#endif
     }
 }
 
