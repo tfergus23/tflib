@@ -8,7 +8,7 @@ void arg_parser::add_optional_arg(const std::string& name, char shorthand){
     m_optional_args[name];
     m_shorthands[shorthand] = name;
 }
-void arg_parser::add_positional_arg(std::string_view name, int position){
+void arg_parser::add_positional_arg(std::string_view name, uint32_t position){
     if (position != m_positional_arg_names.size()){
         throw std::runtime_error("Tried to add positional arg at index " + std::to_string(position) + ", expected index: " + std::to_string(m_positional_arg_names.size()));
     }
@@ -25,8 +25,8 @@ std::string arg_parser::get_optional_arg(const std::string& name) const{
     }
     return m_optional_args.at(name);
 }
-std::string arg_parser::get_positional_arg(int position) const{
-    if (position < m_positional_arg_values.size() && position >= 0){
+std::string arg_parser::get_positional_arg(uint32_t position) const{
+    if (position < m_positional_arg_values.size()){
         return m_positional_arg_values[position];
     }
     return "";
@@ -36,7 +36,7 @@ bool arg_parser::get_flag(const std::string& name) const{
 }
 
 std::string arg_parser::parse(int argc, char** argv){
-    int positional_index = 0;
+    uint32_t positional_index = 0;
     std::string last_optional_arg_found = "";
     for (int i = 1; i < argc; ++i){
         std::string arg = argv[i];
@@ -48,7 +48,7 @@ std::string arg_parser::parse(int argc, char** argv){
             arg_name = arg.substr(2,arg.size()-2);
             is_optional = true;
         }
-        else if (arg.size() >= 1 & arg[0] == '-'){
+        else if (arg.size() >= 1 && arg[0] == '-'){
             if (arg.size() != 2){
                 return "Invalid shorthand argument: '" + arg + "'";
             }

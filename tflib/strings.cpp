@@ -9,8 +9,8 @@
 const std::string WHITESPACE = " \n\r\t\f\v";
 
 std::vector<std::string> tflib::split(const std::string &string, const std::string& delimitter){
-    int start = 0;
-    int next = 0;
+    size_t start = 0;
+    size_t next = 0;
     std::vector<std::string> out;
     while (start < string.size()){
         next = string.find(delimitter, start);
@@ -27,8 +27,8 @@ std::vector<std::string> tflib::split(const std::string &string, const std::stri
 }
 
 std::vector<std::string_view> tflib::split_views(std::string_view string, std::string delimitter){
-    int start = 0;
-    int next = 0;
+    size_t start = 0;
+    size_t next = 0;
     std::vector<std::string_view> out;
     while (start < string.size()){
         next = string.find(delimitter, start);
@@ -52,12 +52,12 @@ std::string tflib::trim(const std::string &string){
     if (string.empty()){
         return "";
     }
-    int begin = string.find_first_not_of(WHITESPACE);
+    size_t begin = string.find_first_not_of(WHITESPACE);
     if (begin == std::string::npos){
         return "";
     }
-    int end = string.find_last_not_of(WHITESPACE) + 1;
-    int size = end - begin;
+    size_t end = string.find_last_not_of(WHITESPACE) + 1;
+    size_t size = end - begin;
     return string.substr(begin, size);
 }
 std::string tflib::to_lower(const std::string &string){

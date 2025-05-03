@@ -25,10 +25,10 @@ void std_err_appender::log(const std::string& message, log_level log_level){
     }
 }
 
-file_appender::file_appender(const file_appender& that) : m_file_path{that.m_file_path}, max_level{that.max_level}, min_level{that.min_level}{
+file_appender::file_appender(const file_appender& that) : max_level{that.max_level}, min_level{that.min_level}, m_file_path{that.m_file_path}{
     m_ofstream.open(m_file_path, std::ios_base::app);
 }
-file_appender::file_appender(log_level level, const std::string& file_path, log_level min_level) : max_level{level}, m_file_path{file_path}, min_level{min_level}{
+file_appender::file_appender(log_level level, const std::string& file_path, log_level min_level) : max_level{level}, min_level{min_level}, m_file_path{file_path}{
     m_ofstream.open(file_path, std::ios_base::app);
 }
 

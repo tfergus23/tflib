@@ -4,14 +4,14 @@
 
 using namespace tflib;
 
-ini_file::ini_file(const std::string& file_path, bool watch_file) : m_file_path{file_path}, watch_file{watch_file}, m_file{file_path} {
+ini_file::ini_file(const std::string& file_path, bool watch_file) : watch_file{watch_file}, m_file_path{file_path}, m_file{file_path} {
     if (!m_file){
         throw std::runtime_error("File not found and no defaults supplied: " + file_path);
     }
     read_file();
 }
 
-ini_file::ini_file(const std::string& file_path, const std::vector<default_value>& defaults, bool watch_file) : m_file_path{file_path}, watch_file{watch_file}, m_defaults{defaults}, m_file{file_path}{
+ini_file::ini_file(const std::string& file_path, const std::vector<default_value>& defaults, bool watch_file) : watch_file{watch_file}, m_file_path{file_path}, m_file{file_path}, m_defaults{defaults}{
     read_file();
 }
 
@@ -64,7 +64,7 @@ void ini_file::read_file(){
             continue;
         }
         if (line != ""){
-            int first_equals = line.find_first_of('=');
+            size_t first_equals = line.find_first_of('=');
             if (first_equals == std::string::npos){
                 continue;
             }
