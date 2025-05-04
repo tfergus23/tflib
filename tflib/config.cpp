@@ -21,7 +21,7 @@ const std::string& ini_file::get(const std::string& section, const std::string& 
     }
     try{
         return m_map.at(section).at(key);
-    } catch (const std::out_of_range& e){
+    } catch (const std::out_of_range&){
         throw std::runtime_error("Key not found in " + m_file_path + ((section == "") ? "" : ", section " + section) + ": '" + key + "'");
     }
 }

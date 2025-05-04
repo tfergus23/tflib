@@ -64,7 +64,7 @@ std::string tflib::to_lower(const std::string &string){
     std::string result = "";
     result.reserve(string.size());
     for (char c : string){
-        result += tolower(c);
+        result.push_back((char)tolower(c));
     }
     return result;
 }
@@ -73,7 +73,7 @@ std::string tflib::to_upper(const std::string &string){
     std::string result = "";
     result.reserve(string.size());
     for (char c : string){
-        result += toupper(c);
+        result.push_back((char)toupper(c));
     }
     return result;
 }

@@ -4,7 +4,11 @@ project("TFLib")
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_compile_options(-Werror -Wextra -Wall)
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    add_compile_options(-Werror -Wall -Wextra)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options(/W4 /WX)
+endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/include/tflib)
 

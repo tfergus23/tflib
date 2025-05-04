@@ -37,10 +37,31 @@ void tflib::load_dotenv(const char* path_to_env_file){
     }
 }
 
-std::string tflib::get_env(std::string_view name){
-    const char* value = getenv(name.data());
-    if (value){
-        return value;
+std::string get_env(std::string_view name) {
+    const char* value = nullptr;
+
+#ifdef __linux__
+    value = getenv(name.data());
+#endif
+
+#ifdef _WIN32
+    char* buffer = nullptr;
+    size_t len = 0;
+    if (_dupenv_s(&buffer, &len, name.data()) == 0 && buffer != nullptr) {
+        value = buffer;
     }
-    return "";
+#endif
+
+    std::string result;
+    if (value) {
+        result = value;
+    }
+
+#ifdef _WIN32
+    if (buffer) {
+        free(buffer); // Free the memory allocated by _dupenv_s
+    }
+#endif
+
+    return result;
 }
