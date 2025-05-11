@@ -4,14 +4,14 @@
 
 using namespace tflib;
 
-ini_file::ini_file(const std::string& file_path, bool watch_file) : watch_file{watch_file}, m_file_path{file_path}, m_file{file_path} {
-    if (!m_file){
+ini_file::ini_file(const std::string& file_path, bool watch_file) : watch_file{watch_file}, m_file_path{file_path} {
+    if (!std::ifstream(file_path).good()){
         throw std::runtime_error("File not found and no defaults supplied: " + file_path);
     }
     read_file();
 }
 
-ini_file::ini_file(const std::string& file_path, const std::vector<default_value>& defaults, bool watch_file) : watch_file{watch_file}, m_file_path{file_path}, m_file{file_path}, m_defaults{defaults}{
+ini_file::ini_file(const std::string& file_path, const std::vector<default_value>& defaults, bool watch_file) : watch_file{watch_file}, m_file_path{file_path}, m_defaults{defaults}{
     read_file();
 }
 
@@ -27,6 +27,18 @@ const std::string& ini_file::get(const std::string& section, const std::string& 
 }
 
 const std::string& ini_file::get(const std::string& key){
+    return get("", key);
+}
+
+const std::string& ini_file::get(const std::string& section, const std::string& key) const{
+    try{
+        return m_map.at(section).at(key);
+    } catch (const std::out_of_range&){
+        throw std::runtime_error("Key not found in " + m_file_path + ((section == "") ? "" : ", section " + section) + ": '" + key + "'");
+    }
+}
+
+const std::string& ini_file::get(const std::string& key) const{
     return get("", key);
 }
 
@@ -53,11 +65,12 @@ void ini_file::read_file(){
     std::string current_section = "";
     load_defaults();
 
-    if (!m_file){
+    std::ifstream file(m_file_path);
+    if (!file){
         return;
     }
 
-    for(std::string line; std::getline(m_file, line);){
+    for(std::string line; std::getline(file, line);){
         line = trim(remove_comment_from_line(line, "#"));
         if (line_is_section_definition(line)){
             current_section = trim(line.substr(1,line.size()-2));
@@ -74,9 +87,6 @@ void ini_file::read_file(){
         }
 
         line_num++;
-    }
-    if (!watch_file){
-        m_file.close();
     }
 }
 
@@ -105,6 +115,19 @@ int32_t ini_file::get_int(const std::string& key){
     return get_int("", key);
 }
 int32_t ini_file::get_int(const std::string& section, const std::string& key){
+    const auto& str = get(section, key);
+    try{
+        return stoi(str);
+    }
+    catch(...){
+        throw std::runtime_error("Invalid value for " + (section != "" ?  section + "." : "") + key + " in " + m_file_path + ". Expected a signed 32-bit integer, got '" + str + "'");
+    }
+}
+
+int32_t ini_file::get_int(const std::string& key) const{
+    return get_int("", key);
+}
+int32_t ini_file::get_int(const std::string& section, const std::string& key) const{
     const auto& str = get(section, key);
     try{
         return stoi(str);
