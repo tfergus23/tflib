@@ -9,16 +9,16 @@
 #endif
 #include "strings.h"
 
-void tflib::load_dotenv(){
-    load_dotenv("./.env");
+bool tflib::load_dotenv(){
+    return load_dotenv("./.env");
 }
 
-void tflib::load_dotenv(const char* path_to_env_file){
+bool tflib::load_dotenv(const char* path_to_env_file){
     std::ifstream file(path_to_env_file);
 
     if(!file.good()){
         std::cerr << "Couldn't open env file: " + std::string(path_to_env_file) << '\n';
-        return;
+        return false;
     }
 
     for (std::string line; std::getline(file, line);){
@@ -30,16 +30,17 @@ void tflib::load_dotenv(const char* path_to_env_file){
 
         std::string name = line.substr(0,equals);
         std::string value = line.substr(equals+1, line.size()-equals);
-#ifdef __LINUX__
+#ifdef __linux__
         setenv(name.c_str(), value.c_str(), 1);
 #endif
 #ifdef _WIN32
         SetEnvironmentVariable(name.c_str(), value.c_str());
 #endif
     }
+    return true;
 }
 
-std::string get_env(std::string_view name) {
+std::string tflib::get_env(std::string_view name) {
     const char* value = nullptr;
 
 #ifdef __linux__

@@ -1,16 +1,10 @@
-#include "static_vector.h"
+#include "dotenv.h"
 #include <vector>
+#include <iostream>
 
 int main(){
-    tflib::static_vector<std::vector<int>, 5> vecs = {
-        {1,2,3},
-        {4,5,6},
-        {7,8,9}
-    };
+    bool success = tflib::load_dotenv();
 
-    vecs.remove_at(0);
 
-    for (auto& vec : vecs){
-        std::cout << vec[1] << '\n';
-    }
+    if (success) std::cout << tflib::get_env("yo") << '\n';
 }
