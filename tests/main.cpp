@@ -1,10 +1,16 @@
-#include "config.h"
+#include "static_vector.h"
+#include <vector>
 
 int main(){
-    tflib::ini_file config("test.ini",{
-        {"", "password", "hello"},
-    }, true);
-    for (std::string line; std::getline(std::cin, line);){
-        std::cout << config.get("password") << '\n';
+    tflib::static_vector<std::vector<int>, 5> vecs = {
+        {1,2,3},
+        {4,5,6},
+        {7,8,9}
+    };
+
+    vecs.remove_at(0);
+
+    for (auto& vec : vecs){
+        std::cout << vec[1] << '\n';
     }
 }

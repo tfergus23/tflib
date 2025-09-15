@@ -4,12 +4,25 @@
 #include <iostream>
 
 namespace tflib{
+    constexpr size_t npos = -1;
     /*
     tflib::static_vector is a std::vector with fixed capacity, meaning it can be allocated on the stack.
     */
     template <typename T, size_t S>
     class static_vector {
     public:
+        static_vector() = default;
+        static_vector(std::initializer_list<T> init){
+#ifndef NDEBUG
+            if (init.size() > S){
+                throw std::length_error("Initializer list exceeds static_vector capacity.");
+            }
+#endif
+            for (const T& item : init){
+                arr[m_size++] = item;
+            }
+        }
+        
         size_t size() const {
             return m_size;
         }
@@ -49,7 +62,7 @@ namespace tflib{
 
         T& operator[](size_t index) {
 #ifndef NDEBUG
-            if (index >= m_size || index < 0) {
+            if (index >= m_size) {
                 throw std::out_of_range("Index is out of bounds of the static vector: " + std::to_string(index));
             }
 #endif
@@ -58,7 +71,7 @@ namespace tflib{
 
         const T& operator[](size_t index) const {
 #ifndef NDEBUG
-            if (index >= m_size || index < 0) {
+            if (index >= m_size) {
                 throw std::out_of_range("Index is out of bounds of the static vector: " + std::to_string(index));
             }
 #endif
@@ -77,12 +90,12 @@ namespace tflib{
                     return i;
                 }
             }
-            return -1;
+            return npos;
         }
 
         void remove_at(size_t index){
 #ifndef NDEBUG
-            if (index >= m_size || index < 0) {
+            if (index >= m_size) {
                 throw std::out_of_range("Index is out of bounds of the static vector: " + std::to_string(index));
             }
 #endif
@@ -91,17 +104,33 @@ namespace tflib{
                 return;
             }
 
-            arr[index].~T();
-
             for (size_t i = index; i < m_size-1; i++){
-                arr[i] = arr[i+1];
+                arr[i] = std::move(arr[i+1]);
             }
-            
-            m_size--;
+            pop_back();
         }
 
-        size_t capacity(){
+        constexpr size_t capacity() const{
             return S;
+        }
+
+        T* begin(){
+            return arr.data();
+        }
+        T* end(){
+            return arr.data() + m_size;
+        }
+        const T* begin() const{
+            return arr.data();
+        }
+        const T* end() const{
+            return arr.data() + m_size;
+        }
+        const T* cbegin() const{
+            return arr.data();
+        }
+        const T* cend() const{
+            return arr.data() + m_size;
         }
     private:
         size_t m_size = 0;

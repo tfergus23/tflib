@@ -7,6 +7,7 @@
 #ifdef _WIN32
 #include <Windows.h>
 #endif
+#include "strings.h"
 
 void tflib::load_dotenv(){
     load_dotenv("./.env");
@@ -21,6 +22,7 @@ void tflib::load_dotenv(const char* path_to_env_file){
     }
 
     for (std::string line; std::getline(file, line);){
+        line = tflib::trim(tflib::remove_comment_from_line(line, "#"));
         size_t equals = line.find("=");
         if (equals == std::string::npos){
             continue;
