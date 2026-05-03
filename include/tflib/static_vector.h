@@ -2,9 +2,10 @@
 #include <stdexcept>
 #include <array>
 #include <iostream>
+#include <limits>
 
 namespace tflib{
-    constexpr size_t npos = -1;
+    constexpr size_t npos = std::numeric_limits<size_t>::max();
     /*
     tflib::static_vector is a std::vector with fixed capacity, meaning it can be allocated on the stack.
     */
@@ -134,6 +135,6 @@ namespace tflib{
         }
     private:
         size_t m_size = 0;
-        std::array<T,S> arr;
+        std::array<T, S> arr{};
     };
 }
